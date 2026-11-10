@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.28)
 project(TreeNSearch)
 set(CMAKE_CXX_STANDARD 17)
 
+option(TREENSEARCH_BUILD_TESTS "TreeNSearch build tests" ON)
+
 if (MSVC)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP") # Parallel compilation in Visual Studio
 endif()
@@ -14,6 +16,9 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     add_compile_options("-Wno-ignored-attributes")  # AVX warnings
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
 	add_compile_options("/arch:AVX")
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    add_compile_options("-march=native")
+    add_compile_options("-mavx")
 endif()
 
 ## OpenMP
@@ -26,4 +31,6 @@ endif()
 
 # Modules
 add_subdirectory(TreeNSearch)
-add_subdirectory(tests)
+if (TREENSEARCH_BUILD_TESTS)
+    add_subdirectory(tests)
+endif ()
